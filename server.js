@@ -53,11 +53,21 @@ app.get('/', (req, res) => {
 });
 
 // HTTPS Server
-const httpsOptions = {
-    key: fs.readFileSync('./certs/server.key'),
-    cert: fs.readFileSync('./certs/server.crt')
-};
+// Server Startup
+// In Production (Render/Cloud), we usually run behind a proxy that terminates SSL.
+// So we should listen on HTTP.
+if (process.env.NODE_ENV === 'production') {
+    app.listen(PORT, () => {
+        console.log(`SPID/CIE Gateway running on port ${PORT} (Production Mode)`);
+    });
+} else {
+    // In Development, we use self-signed certs to emulate HTTPS locally
+    const httpsOptions = {
+        key: fs.readFileSync('./certs/server.key'),
+        cert: fs.readFileSync('./certs/server.crt')
+    };
 
-https.createServer(httpsOptions, app).listen(PORT, () => {
-    console.log(`SPID/CIE Demo Server running on https://localhost:${PORT}`);
-});
+    https.createServer(httpsOptions, app).listen(PORT, () => {
+        console.log(`SPID/CIE Demo Server running on https://localhost:${PORT}`);
+    });
+}

@@ -1,9 +1,21 @@
 const fs = require('fs');
 const path = require('path');
 
-// Load AgID Compliant Certificates (Required for Real IdPs)
-const privateKey = fs.readFileSync(path.join(__dirname, '../certs/spid-agid-private.key'), 'utf-8');
-const spCert = fs.readFileSync(path.join(__dirname, '../certs/spid-agid-cert.pem'), 'utf-8');
+// Load AgID Compliant Certificates
+// In production (Render), we can pass the key content via Env Var to avoid committing secrets
+const loadKey = (envVar, filePath) => {
+    if (process.env[envVar]) {
+        // Handle potential newlines in env vars (often escaped as \n)
+        return process.env[envVar].replace(/\\n/g, '\n');
+    }
+    if (fs.existsSync(filePath)) {
+        return fs.readFileSync(filePath, 'utf-8');
+    }
+    return ''; // Return empty or handle error
+};
+
+const privateKey = loadKey('SPID_PRIVATE_KEY', path.join(__dirname, '../certs/spid-agid-private.key'));
+const spCert = loadKey('SPID_PUBLIC_CERT', path.join(__dirname, '../certs/spid-agid-cert.pem'));
 
 // Configuration for passport-saml
 module.exports = {

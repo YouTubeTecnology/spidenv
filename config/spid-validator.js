@@ -1,9 +1,21 @@
 const fs = require('fs');
 const path = require('path');
 
-// Load AgID Compliant Certificates
-const privateKey = fs.readFileSync(path.join(__dirname, '../certs/spid-agid-private.key'), 'utf-8');
-const spCert = fs.readFileSync(path.join(__dirname, '../certs/spid-agid-cert.pem'), 'utf-8');
+// Load Certificates helper
+const loadKey = (envVar, filePath) => {
+    if (process.env[envVar]) {
+        return process.env[envVar].replace(/\\n/g, '\n');
+    }
+    try {
+        return fs.readFileSync(filePath, 'utf-8');
+    } catch (e) {
+        console.warn(`Warning: Could not load certificate from ${filePath}`);
+        return '';
+    }
+};
+
+const privateKey = loadKey('SPID_PRIVATE_KEY', path.join(__dirname, '../certs/spid-agid-private.key'));
+const spCert = loadKey('SPID_PUBLIC_CERT', path.join(__dirname, '../certs/spid-agid-cert.pem'));
 
 module.exports = {
     // Validator Environment URLs
