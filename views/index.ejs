@@ -1,0 +1,60 @@
+<%- include('header') %>
+
+    <div class="row">
+        <div class="col-12">
+            <% if (typeof user !=='undefined' && user) { %>
+                <div class="alert alert-success" role="alert">
+                    Autenticazione riuscita con <strong>
+                        <%= user.provider.toUpperCase() %>
+                    </strong>!
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Dati Utente</h5>
+                        <dl class="row">
+                            <dt class="col-sm-3">Nome</dt>
+                            <dd class="col-sm-9">
+                                <%= user.name %>
+                            </dd>
+
+                            <dt class="col-sm-3">Cognome</dt>
+                            <dd class="col-sm-9">
+                                <%= user.surname %>
+                            </dd>
+
+                            <dt class="col-sm-3">Codice Fiscale</dt>
+                            <dd class="col-sm-9">
+                                <%= user.fiscalNumber || 'N/A' %>
+                            </dd>
+
+                            <dt class="col-sm-3">Email</dt>
+                            <dd class="col-sm-9">
+                                <%= user.email %>
+                            </dd>
+
+                            <dt class="col-sm-3">ID Provider</dt>
+                            <dd class="col-sm-9">
+                                <%= user.id %>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h6>Dati Grezzi (Debug)</h6>
+                    <pre class="bg-light p-3 border"><%= JSON.stringify(user.raw, null, 2) %></pre>
+                </div>
+
+                <% } else { %>
+                    <div class="jumbotron">
+                        <h1 class="display-4">Benvenuto!</h1>
+                        <p class="lead">Questa è una demo per l'integrazione di SPID e CIE in Node.js.</p>
+                        <hr class="my-4">
+                        <a class="btn btn-primary btn-lg" href="/login" role="button">Vai al Login</a>
+                    </div>
+                    <% } %>
+        </div>
+    </div>
+
+    <%- include('footer') %>

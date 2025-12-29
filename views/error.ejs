@@ -1,0 +1,12 @@
+<%- include('header') %>
+
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Errore di Autenticazione!</h4>
+        <p>
+            <%= typeof message !=='undefined' ? message : 'Si è verificato un errore durante il processo.' %>
+        </p>
+        <hr>
+        <p class="mb-0"><a href="/login" class="alert-link">Riprova</a></p>
+    </div>
+
+    <%- include('footer') %>

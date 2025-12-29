@@ -1,0 +1,88 @@
+<%- include('header') %>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="mb-4">Accedi a Protezione Civile</h1>
+
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <!-- SPID Smart Button Structure -->
+                    <!-- Styled roughly to resemble AgID specs using Bootstrap Italia -->
+                    <div class="spid-select-button">
+                        <button
+                            class="btn btn-primary btn-block dropdown-toggle spid-idp-button text-left d-flex align-items-center justify-content-between"
+                            type="button" id="spidButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false" style="background-color: #0066cc; border: none;">
+                            <span class="d-flex align-items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Spid-logo-c-lb.svg"
+                                    alt="SPID"
+                                    style="height: 25px; margin-right: 10px; background: white; padding: 2px; border-radius: 2px;">
+                                <span class="font-weight-bold text-white">Entra con SPID</span>
+                            </span>
+                        </button>
+                        <div class="dropdown-menu w-100" aria-labelledby="spidButton">
+                            <h6 class="dropdown-header">Scegli il tuo Identity Provider</h6>
+
+                            <a class="dropdown-item d-flex align-items-center" href="/login/spid?idp=posteid">
+                                <img src="https://www.poste.it/img/1476457317765/poste-id-logo.png" alt="PosteID"
+                                    style="height: 20px; margin-right: 10px;"> PosteID
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="/login/spid?idp=arubaid">
+                                <img src="https://www.pec.it/img/logo_aruba_id.png" alt="Aruba ID"
+                                    style="height: 20px; margin-right: 10px;"> Aruba ID
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="/login/spid?idp=infocertid">
+                                <img src="https://my.infocert.it/selfcare/assets/img/logo-infocert-id.png"
+                                    alt="InfoCert ID" style="height: 20px; margin-right: 10px;"> InfoCert ID
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="/login/spid?idp=intesaid">
+                                Intesa ID
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="/login/spid?idp=namirialid">
+                                Namirial ID
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="/login/spid?idp=registerit">
+                                SpidItalia
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="/login/spid?idp=sielteid">
+                                Sielte ID
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="/login/spid?idp=timid">
+                                TIM ID
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="/login/spid?idp=lepidaid">
+                                Lepida ID
+                            </a>
+
+                            <div class="dropdown-divider"></div>
+                            <h6 class="dropdown-header">Ambienti di Test</h6>
+                            <a class="dropdown-item" href="/login/spid?idp=validator">AgID Validator</a>
+                            <a class="dropdown-item" href="/login/spid?idp=demo">Demo Locale</a>
+                        </div>
+                    </div>
+
+                    <p class="mt-2 text-muted"><small>Maggiori informazioni su SPID</small></p>
+                </div>
+            </div>
+
+            <div class="my-3">
+                <span class="text-muted">oppure</span>
+            </div>
+
+            <!-- CIE Button -->
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <a href="/login/cie"
+                        class="btn btn-primary btn-block text-left d-flex align-items-center justify-content-between"
+                        style="background-color: #003366; border: none;">
+                        <span class="d-flex align-items-center">
+                            <span class="font-weight-bold text-white ml-2">Entra con CIE</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <%- include('footer') %>
