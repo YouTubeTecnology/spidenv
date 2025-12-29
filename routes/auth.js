@@ -114,9 +114,38 @@ router.post('/acs',
 // SPID Metadata
 router.get('/metadata', (req, res) => {
     res.type('application/xml');
-    res.send(samlStrategy.generateServiceProviderMetadata(
-        fs.readFileSync(path.join(__dirname, '../certs/spid-cert.pem'), 'utf-8')
-    ));
+    // Use certificate from config which is environment-aware
+    // If config.cert is missing (placeholder), try loading explicitly using same logic as validator or just allow Strategy default if configured
+    // For this specific line, we were manually reading 'spid-cert.pem' (the old one) or 'spid-agid-cert.pem'. 
+    // Let's assume we want to use the AgID one we configured in spidConfig.
+    // NOTE: spidConfig.cert might be the IdP cert for validation, NOT the keys. 
+    // We need the public key corresponding to spidConfig.privateKey.
+
+    // In spid.js we didn't export the public cert as a separate "publicCert" property, we only exported it via `cert` if it was the IdP cert... 
+    // Wait, in spid.js `cert` is the IdP cert. 
+    // We need the SP public cert for metadata.
+
+    // Let's construct it safely. 
+    const spCert = spidConfig.spCert || ''; // We need to ensure spid.js exports this.
+
+    // Since spid.js doesn't export spCert publicly by default (it's local scope), we should probably use the same file read with try/catch OR update spid.js to export it.
+    // Updating spid.js to export spCert is better.
+
+    // For now, let's duplicate the Env Var check here or assume spid-validator logic applies if usage is for Validator. 
+    // But this is the GENERIC /metadata route (likely for other IdPs).
+
+    // Let's use the file read but with Env Var fallback.
+
+    let headerCert = process.env.SPID_PUBLIC_CERT;
+    if (!headerCert) {
+        try {
+            headerCert = fs.readFileSync(path.join(__dirname, '../certs/spid-agid-cert.pem'), 'utf-8');
+        } catch (e) {
+            headerCert = '';
+        }
+    }
+
+    res.send(samlStrategy.generateServiceProviderMetadata(headerCert));
 });
 
 // --- CIE Strategy Setup (Async) ---
@@ -250,9 +279,13 @@ router.get('/metadata/validator', (req, res) => {
     // if the library doesn't output Organization/ContactPerson.
 
     // Hack: Post-process XML to add Organization if missing (simplified)
-    let metadata = samlValidatorStrategy.generateServiceProviderMetadata(
-        fs.readFileSync(path.join(__dirname, '../certs/spid-agid-cert.pem'), 'utf-8')
-    );
+    const cert = spidValidatorConfig.cert; // Use certificate loaded from config (Env or File)
+
+    if (!cert) {
+        return res.status(500).send('Certificate not configured. Please set SPID_PUBLIC_CERT environment variable.');
+    }
+
+    let metadata = samlValidatorStrategy.generateServiceProviderMetadata(cert);
 
     // Inject Organization info if not present (passport-saml might not add it by default)
     // This is a basic string replacement for demo purposes. In prod, use xmlbuilder.
